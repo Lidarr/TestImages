@@ -57,6 +57,7 @@ stages:
           containerRegistry: 'dockerhub'
           command: 'login'
       - task: Docker@2
+        displayName: Push to Docker Hub
         inputs:
           containerRegistry: 'dockerhub'
           repository: 'lidarr/testimages'
