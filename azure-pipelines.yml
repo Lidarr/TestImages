@@ -51,9 +51,15 @@ stages:
         fetchDepth: 1
       - bash: ./generate_images.sh -v $(monoVersion)
         displayName: Build Mono $(monoVersion)
-      - bash: |
-          echo $DOCKER_PASSWORD | sudo docker login -username lidarrbuild --password-stdin
-          sudo docker push lidarr/testimages:mono-$(monoVersion)
+      - task: Docker@2
+        displayName: Login to Docker Hub
+        inputs:
+          containerRegistry: 'dockerhub'
+          command: 'login'
+      - task: Docker@2
+        inputs:
+          containerRegistry: 'dockerhub'
+          repository: 'lidarr/testimages'
+          command: 'push'
+          tags: 'mono-$(monoVersion)'
         condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
-        env:
-          DOCKER_PASSWORD: $(dockerPassword)
