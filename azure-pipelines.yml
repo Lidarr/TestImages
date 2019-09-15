@@ -19,13 +19,33 @@ stages:
     - job: Build
       strategy:
         matrix:
+          mono604:
+            monoVersion: 6.4
+          mono600:
+            monoVersion: 6.0
           mono520:
             monoVersion: 5.20
+          mono518:
+            monoVersion: 5.18
+          mono516:
+            monoVersion: 5.16
+          mono514:
+            monoVersion: 5.14
+          mono512:
+            monoVersion: 5.12
+          mono510:
+            monoVersion: 5.10
+          mono508:
+            monoVersion: 5.8
+          mono504:
+            monoVersion: 5.4
+          mono500:
+            monoVersion: 5.0
 
       pool:
         vmImage: ubuntu-16.04
+
       steps:
-      # Set the build name properly.  The 'name' property won't recursively expand so hack here:
       - checkout: self
         submodules: true
         fetchDepth: 1
