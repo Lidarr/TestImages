@@ -1,0 +1,39 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+  branches:
+    include:
+    - master
+
+pr:
+- master
+
+stages:
+  - stage: Build_Images
+    displayName: Build
+          
+    jobs:
+    - job: Build
+      strategy:
+        matrix:
+          mono520:
+            monoVersion: 5.20
+
+      pool:
+        vmImage: ubuntu-16.04
+      steps:
+      # Set the build name properly.  The 'name' property won't recursively expand so hack here:
+      - checkout: self
+        submodules: true
+        fetchDepth: 1
+      - bash: ./generate_images.sh -v $(monoVersion)
+        displayName: Build Mono $(monoVersion)
+      - bash: |
+          echo $DOCKER_PASSWORD | sudo docker login -username lidarrbuild --password-stdin
+          sudo docker push lidarr/testimages:mono-$(monoVersion)
+        condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
+        env:
+          DOCKER_PASSWORD: $(dockerPassword)
