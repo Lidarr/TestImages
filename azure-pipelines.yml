@@ -20,27 +20,38 @@ stages:
       strategy:
         matrix:
           mono604:
-            monoVersion: 6.4
+            monoVersionArg: 6.4=preview-xenial
+            tagName: 6.4
           mono600:
-            monoVersion: 6.0
+            monoVersionArg: 6.0
+            tagName: 6.0
           mono520:
-            monoVersion: 5.20
+            monoVersionArg: 5.20
+            tagName: 5.20
           mono518:
-            monoVersion: 5.18
+            monoVersionArg: 5.18
+            tagName: 5.18
           mono516:
-            monoVersion: 5.16
+            monoVersionArg: 5.16
+            tagName: 5.16
           mono514:
-            monoVersion: 5.14
+            monoVersionArg: 5.14
+            tagName: 5.14
           mono512:
-            monoVersion: 5.12
+            monoVersionArg: 5.12
+            tagName: 5.12
           mono510:
-            monoVersion: 5.10
+            monoVersionArg: 5.10
+            tagName: 5.10
           mono508:
-            monoVersion: 5.8
+            monoVersionArg: 5.8
+            tagName: 5.8
           mono504:
-            monoVersion: 5.4
+            monoVersionArg: 5.4
+            tagName: 5.4
           mono500:
-            monoVersion: 5.0
+            monoVersionArg: 5.0
+            tagName: 5.0
 
       pool:
         vmImage: ubuntu-16.04
@@ -49,8 +60,8 @@ stages:
       - checkout: self
         submodules: true
         fetchDepth: 1
-      - bash: ./generate_images.sh -v $(monoVersion)
-        displayName: Build Mono $(monoVersion)
+      - bash: ./generate_images.sh -v $(monoVersionArg)
+        displayName: Build Mono $(tagName)
       - task: Docker@2
         displayName: Login to Docker Hub
         inputs:
@@ -62,5 +73,5 @@ stages:
           containerRegistry: 'dockerhub'
           repository: 'lidarr/testimages'
           command: 'push'
-          tags: 'mono-$(monoVersion)'
+          tags: 'mono-$(tagName)'
         condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
