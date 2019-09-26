@@ -19,8 +19,11 @@ stages:
     - job: Build
       strategy:
         matrix:
+          mono606:
+            monoVersionArg: 6.6=preview-xenial
+            tagName: 6.6
           mono604:
-            monoVersionArg: 6.4=preview-xenial
+            monoVersionArg: 6.4
             tagName: 6.4
           mono600:
             monoVersionArg: 6.0
@@ -46,12 +49,6 @@ stages:
           mono508:
             monoVersionArg: 5.8
             tagName: 5.8
-          mono504:
-            monoVersionArg: 5.4
-            tagName: 5.4
-          mono500:
-            monoVersionArg: 5.0
-            tagName: 5.0
 
       pool:
         vmImage: ubuntu-16.04
